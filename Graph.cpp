@@ -7,8 +7,8 @@ using namespace std;
 
 Edge::Edge()
 {
-	from = nullptr;
-	to = nullptr;
+	from = '0';
+	to = '0';
 }
 
 Edge::Edge(string fromVal, string toVal, int weightVal)
@@ -20,7 +20,7 @@ Edge::Edge(string fromVal, string toVal, int weightVal)
 
 Vertex::Vertex()
 {
-	label = nullptr;
+	label = '0';
 }
 
 Vertex::Vertex(string labelVal)
@@ -53,6 +53,12 @@ void Graph::removeVertex(string label)
 	{
 		if (it->label == label)
 		{
+			std::list<Vertex>::iterator eit;
+			for (eit = it->edges.begin(); eit != it->edges.end(); eit++)
+			{
+				removeEdge(it->label, eit->label);
+				eit--;
+			}
 			length -= 1;
 			vertices.remove(*it);
 			break;
@@ -66,55 +72,82 @@ void Graph::removeVertex(string label)
 /// <param name="label1">Current node</param>
 /// <param name="label2">Next node</param>
 /// <param name="weight">Weight?</param>
-void Graph::addEdge(string label1, string label2, unsigned long weight)		//no need to implement because edges are implied
+void Graph::addEdge(string label1, string label2, unsigned long weight)
 {
 	std::list<Vertex>::iterator it;
-	Vertex target1;
-	Vertex target2;
+	Vertex* target1 = nullptr;
+	Vertex* target2 = nullptr;
 	for (it = vertices.begin(); it != vertices.end(); it++)
 	{
 		if (it->label == label1)
 		{
-			target1 = *it;
-			if (target2.label == label2)
+			target1 = &(*it);
+			if (target2 != nullptr && target2->label == label2)
 				break;
 		}
 		else if (it->label == label2)
 		{
-			target2 = *it;
-			if (target1.label == label1)
+			target2 = &(*it);
+			if (target1 != nullptr && target1->label == label1)
 				break;
 		}
 	}
-	target1.edges.push_back(target2);
-	target2.edges.push_back(target1);
+	target1->edges.push_back(*target2);
+	target2->edges.push_back(*target1);
 };
 
-void Graph::removeEdge(string label1, string label2)		//no need to implement because edges are implied
+void Graph::removeEdge(string label1, string label2)
 {
 	std::list<Vertex>::iterator it;
-	Vertex target1;
-	Vertex target2;
+	Vertex* target1 = nullptr;
+	Vertex* target2 = nullptr;
+	bool searchSuccess = false;
 	for (it = vertices.begin(); it != vertices.end(); it++)
 	{
 		if (it->label == label1)
 		{
-			target1 = *it;
-			if (target2.label == label2)
+			target1 = &(*it);
+			if (target2 != nullptr && target2->label == label2)
+			{
+				searchSuccess = true;
 				break;
+			}
 		}
 		else if (it->label == label2)
 		{
-			target2 = *it;
-			if (target1.label == label1)
+			target2 = &(*it);
+			if (target1 != nullptr && target1->label == label1)
+			{
+				searchSuccess = true;
 				break;
+			}
 		}
 	}
-	target1.edges.remove(target2);
-	target2.edges.remove(target1);
+
+	if (searchSuccess)
+	{
+		target1->edges.remove(*target2);
+		target2->edges.remove(*target1);
+	}
 };
 
 unsigned long Graph::shortestPath(string startLabel, string endLabel, vector<string>& path)
 {
 
+	return 0;
 };
+
+void Graph::printGraph()
+{
+	std::list<Vertex>::iterator it;
+	for (it = vertices.begin(); it != vertices.end(); it++)
+	{
+		cout << it->label << ": " << endl;
+		std::list<Vertex>::iterator it2;
+		for (it2 = it->edges.begin(); it2 != it->edges.end(); it2++)
+		{
+			cout << "    " << it2->label << endl;
+		}
+		cout << "    " << endl;
+	}
+}

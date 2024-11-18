@@ -28,9 +28,15 @@ struct Vertex		//Represents graph points
 		Vertex();
 		Vertex(string labelVal);
 
+	bool operator==(const struct Vertex& vert) const
+	{
+		return (vert.label == this->label);
+	}
+
 	private:
 		list<Vertex> edges;
 		friend class Graph;        //gives "Graph" access to Edge values.
+
 };
 
 class Graph : public GraphBase		//Based off of Adjacency List
@@ -45,6 +51,7 @@ class Graph : public GraphBase		//Based off of Adjacency List
 		void addEdge(string label1, string label2, unsigned long weight) override;
 		void removeEdge(string label1, string label2) override;
 		unsigned long shortestPath(string startLabel, string endLabel, vector<string>& path) override;
+		void printGraph();
 
 	private:
 		list<Vertex> vertices;
