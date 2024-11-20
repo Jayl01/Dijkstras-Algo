@@ -54,10 +54,10 @@ void Graph::removeVertex(string label)
 		if (it->label == label)
 		{
 			std::list<Vertex>::iterator eit;
-			for (eit = it->edges.begin(); eit != it->edges.end(); eit++)
+			for (eit = it->edges.begin(); eit != it->edges.end(); /* none */)		//gets nodes connected by edges
 			{
 				removeEdge(it->label, eit->label);
-				eit--;
+				eit = it->edges.begin();
 			}
 			length -= 1;
 			vertices.remove(*it);
@@ -133,8 +133,17 @@ void Graph::removeEdge(string label1, string label2)
 
 unsigned long Graph::shortestPath(string startLabel, string endLabel, vector<string>& path)
 {
+	for (it = startVertex.edges.begin(); it != startVertex.edges.end(); it++)
+	{
 
-	return 0;
+	}
+	Vertex startVertex = *vertices.begin();
+
+	std::list<Vertex>::iterator it;
+	for (it = startVertex.edges.begin(); it != startVertex.edges.end(); it++)
+	{
+
+	}
 };
 
 void Graph::printGraph()
