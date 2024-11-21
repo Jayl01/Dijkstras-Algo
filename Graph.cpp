@@ -1,35 +1,11 @@
 
 #include <string>
 #include "Graph.hpp"
+#include "Vertex.hpp"
+#include "Edge.hpp"
 #include <list>
 #include <iostream>
 using namespace std;
-
-Edge::Edge()
-{
-	from = nullptr;
-	to = nullptr;
-	weight = 0;
-}
-
-Edge::Edge(Vertex fromVal, Vertex toVal, int weightVal)
-{
-	from = &fromVal;
-	to = &toVal;
-	weight = weightVal;
-}
-
-Vertex::Vertex()
-{
-	label = '0';
-	edges;
-}
-
-Vertex::Vertex(string labelVal)
-{
-	label = labelVal;
-	edges;
-}
 
 Graph::Graph()
 {
@@ -59,7 +35,7 @@ void Graph::removeVertex(string label)
 			list<Edge>::iterator eit;		//edge iterator
 			for (eit = it->edges.begin(); eit != it->edges.end(); /* none */)		//gets nodes connected by edges
 			{
-				removeEdge(it->label, eit->to->label);
+				removeEdge(it->label, eit->to.label);
 				eit = it->edges.begin();
 			}
 			length -= 1;
@@ -138,7 +114,7 @@ void Graph::removeEdge(string label1, string label2)
 		list<Edge>::iterator eit;
 		for (eit = target1->edges.begin(); eit != target1->edges.end(); eit++)
 		{
-			if (eit->to == target2 || eit->from == target2)
+			if (eit->to == *target2 || eit->from == *target2)
 			{
 				target1->edges.remove(*eit);
 				break;
@@ -146,7 +122,7 @@ void Graph::removeEdge(string label1, string label2)
 		}
 		for (eit = target2->edges.begin(); eit != target2->edges.end(); eit++)
 		{
-			if (eit->to == target1 || eit->from == target1)
+			if (eit->to == *target1 || eit->from == *target1)
 			{
 				target2->edges.remove(*eit);
 				break;
@@ -181,12 +157,12 @@ unsigned long Graph::shortestPath(string startLabel, string endLabel, vector<str
 		list<Edge>::iterator eit;
 		for (eit = startVertex.edges.begin(); eit != startVertex.edges.end(); eit++)		//search currVert edges for closest distance (lowest weight)
 		{
-			if (eit->from == currentVertex && !nodeInPath(eit->to->label, path))
+			if (eit->from == *currentVertex && !nodeInPath(eit->to.label, path))
 			{
 				if (eit->weight < nearestWeight)
 				{
 					nearestWeight = eit->weight;
-					closestVertex = eit->to;
+					closestVertex = &eit->to;
 				}
 			}
 		}
@@ -209,37 +185,6 @@ bool Graph::nodeInPath(string label, vector<string>& path)
 	return false;
 }
 
-long Graph::recursiveSearch(Vertex currVert, string startLabel, string endLabel, int currLen, vector<string>& path)
-{
-	return 0;
-
-	/*currLen++;
-	list<Vertex>::iterator it;
-	for (it = currVert.edges.begin(); it != currVert.edges.end(); it++)
-	{
-		vector<string>::iterator sit;
-		bool skipNode = false;
-		for (sit = path.end(); sit != path.begin(); sit--)
-		{
-			if (*sit == it->label)
-			{
-				skipNode = true;
-				break;
-			}
-		}
-		if (skipNode)
-			continue;
-
-		if (it->label == endLabel)
-			return currLen;
-		else
-		{
-			path.push_back(it->label);
-			recursiveSearch(*it, startLabel, endLabel, currLen, path);
-		}
-	}*/
-}
-
 void Graph::printGraph()
 {
 	list<Vertex>::iterator it;
@@ -249,8 +194,8 @@ void Graph::printGraph()
 		list<Edge>::iterator it2;
 		for (it2 = it->edges.begin(); it2 != it->edges.end(); it2++)
 		{
-			if (it2->to->label != it->label)
-				cout << "    " << it2->to->label << endl;
+			if (it2->to.label != it->label)
+				cout << "    " << it2->to.label << endl;
 		}
 		cout << "    " << endl;
 	}
