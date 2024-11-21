@@ -1,4 +1,7 @@
 #include "Graph.hpp"
+#include <iostream>
+
+using namespace std;
 
 int main()
 {
@@ -26,4 +29,15 @@ int main()
 	g.addEdge("N6", "N7", 0);
 
 	g.printGraph();
+	cout << "   " << endl;
+	cout << "   " << endl;
+	cout << "   " << endl;
+
+	vector<string> path;
+	g.shortestPath("N0", "N7", path);
+	vector<string>::iterator it;
+	for (it = path.begin(); it != path.end(); it++)
+	{
+		cout << *it << endl;
+	}
 }
